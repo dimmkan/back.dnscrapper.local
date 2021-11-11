@@ -1,7 +1,5 @@
 const userAgent = require('user-agents')
 const useragent = new userAgent(/Safari/, {"deviceCategory": "desktop"});
-const fs = require('fs')
-
 
 const scraperObject = {
     url: process.env.URL,
