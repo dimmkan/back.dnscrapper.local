@@ -14,7 +14,7 @@ const scraperObject = {
         await page.setUserAgent(useragent.toString())
         console.log(`Переход на ${this.url}`)
         await page.goto(this.url, {waitUntil: 'networkidle2'})
-        const price = await page.$eval('div.product-buy__price.product-buy__price_active', el => {
+        resultObject.price= await page.$eval('div.product-buy__price.product-buy__price_active', el => {
             const price = el.innerText
             const priceArr = price.split('₽')
             if(priceArr.length){
@@ -22,7 +22,7 @@ const scraperObject = {
             }
             return 0
         })
-        console.log('price')
+        console.log('price', resultObject.price)
         await page.waitForSelector('div.order-avail-wrap')
         const inStock = await page.$eval('div.order-avail-wrap', el => {
             return el.innerText
@@ -33,13 +33,23 @@ const scraperObject = {
             if(click){
                 await page.click('div.order-avail-wrap > a')
                 console.log('click')
-                await page.waitForSelector('div.base-shop-choose-list__item-list')
+                await page.waitForSelector('div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn')
                 const shopArray = await page.$$('div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn')
-                console.log(shopArray.length)
+                for(const content of shopArray){
+                    const count = await content.$eval('div.base-shop-view__issue-date', el => {
+                        return el.innerText
+                    })
+                    if(count !== 'нет в наличии'){
+                        const shop = await content.$eval('div.base-shop-view__title', el => {
+                            return el.innerText
+                        })
+                        resultObject.shops.push(shop)
+                    }
+                }
             }
 
         }
-
+        browser.close()
         return resultObject
     }
 }
