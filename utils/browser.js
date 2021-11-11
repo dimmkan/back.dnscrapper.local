@@ -12,6 +12,7 @@ async function startBrowser(){
         });
     } catch (err) {
         console.log("Не удалось создать экземпляр браузера => : ", err);
+        browser.close()
     }
     return browser;
 }
