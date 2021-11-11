@@ -13,9 +13,13 @@ const scraperObject = {
         let page = await browser.newPage();
         await page.setUserAgent(useragent.toString())
         console.log(`Переход на ${this.url}`)
-        await page.goto(this.url, {waitUntil: 'networkidle2'})
-        await page.waitForTimeout(5000)
-        resultObject.price= await page.$eval('div.product-buy__price.product-buy__price_active', el => {
+        await page.goto(this.url, {waitUntil: 'domcontentloaded'})
+        const cityButton = page.$('a.btn.btn-additional')
+        if(cityButton){
+            await page.click('a.btn.btn-additional')
+        }
+        await page.waitForSelector('div.product-buy__price.product-buy__price_active')
+        resultObject.price = await page.$eval('div.product-buy__price.product-buy__price_active', el => {
             const price = el.innerText
             const priceArr = price.split('₽')
             if(priceArr.length){
@@ -34,15 +38,13 @@ const scraperObject = {
             if(click){
                 await page.click('div.order-avail-wrap > a')
                 console.log('click')
-                await page.waitForTimeout(5000)
-                await page.waitForSelector('div.base-shop-choose-list.vue-shop-avail__shops-list', {waitUntil: 'networkidle2'})
-                await page.waitForSelector('div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn > div.base-shop-view__issue-date',{waitUntil: 'networkidle2'})
+                await page.waitForSelector('div.base-shop-choose-list.vue-shop-avail__shops-list', {waitUntil: 'load'})
+                await page.waitForSelector('div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn > div.base-shop-view__issue-date',{waitUntil: 'load'})
                 const shopArray = await page.$$('div.base-shop-choose-list.vue-shop-avail__shops-list > div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn')
                 for(const content of shopArray){
                     const count = await content.$eval('div.base-shop-view__issue-date', el => {
                         return el.innerText
                     })
-                    console.log(count)
                     if(count !== 'нет в наличии'){
                         const shop = await content.$eval('div.base-shop-view__title', el => {
                             return el.innerText
@@ -53,7 +55,7 @@ const scraperObject = {
             }
 
         }
-        //browser.close()
+        browser.close()
         console.log('Браузер закрыт')
         return resultObject
     }
