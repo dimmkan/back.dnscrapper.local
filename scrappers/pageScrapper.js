@@ -37,14 +37,14 @@ const scraperObject = {
         const inStock = await page.$eval('div.order-avail-wrap', el => {
             return el.innerText
         })
-        console.log('in stock')
         if(inStock !== "Товара нет в наличии"){
+            console.log('in stock')
             const click = await page.$('div.order-avail-wrap > a')
             if(click){
                 await page.click('div.order-avail-wrap > a')
                 console.log('click')
                 await page.waitForTimeout(5000)
-                console.log('click 2')
+                console.log('load modal')
                 await page.waitForSelector('div.base-shop-choose-list.vue-shop-avail__shops-list')
                 await page.waitForSelector('div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn > div.base-shop-view__issue-date')
                 const shopArray = await page.$$('div.base-shop-choose-list.vue-shop-avail__shops-list > div.base-shop-choose-list__item-list > div.base-shop-view.base-shop-choose-list__shop.base-shop-choose-list__shop-btn')
@@ -62,7 +62,7 @@ const scraperObject = {
             }
 
         }
-        //browser.close()
+        browser.close()
         console.log('Браузер закрыт')
         return resultObject
     }
