@@ -1,0 +1,31 @@
+{
+  "name": "back.dnscrapper.local",
+  "version": "1.0.0",
+  "description": "back.dnscrapper.local",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimmkan/back.dnscrapper.local.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dimmkan/back.dnscrapper.local/issues"
+  },
+  "homepage": "https://github.com/dimmkan/back.dnscrapper.local#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "puppeteer": "^11.0.0",
+    "user-agents": "^1.0.831"
+  }
+}
