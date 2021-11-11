@@ -6,7 +6,7 @@ const app = express()
 const  LISTEN_PORT = process.env.PORT || 3000
 
 app.use(express.json())
-app.use('/api/parser', parserRoutes)
+app.use('/parse', parserRoutes)
 
 function start(){
     try {
